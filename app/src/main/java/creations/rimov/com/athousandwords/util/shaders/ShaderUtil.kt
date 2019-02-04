@@ -18,15 +18,6 @@ object ShaderUtil {
         const val A_NODE_TEX_COORDS = "a_NodeTexCoords"
 
         const val U_PROJECTION_MAT = "u_ProjectionMat"
-
-        val texCoords = floatArrayOf(
-            0.5f, 0.5f,
-            0f, 0f,
-            0f, 1f,
-            1f, 1f,
-            1f, 0f,
-            0f, 0f
-        )
     }
 
     object NodeFragConsts {

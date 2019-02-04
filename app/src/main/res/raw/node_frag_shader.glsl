@@ -4,11 +4,11 @@ precision mediump float;
 uniform sampler2D u_NodeSampler;
 
 //takes the texture coords from the vertex shader
-varying vec2 v_TexCoordsOut;
+varying vec2 v_NodeTexCoords;
 
 varying vec4 v_NodeVertexColor;
 
 void main() {
     //texture2D reads the value of the current pixel in the texture
-    gl_FragColor = (v_Color * texture2D(u_NodeSampler, v_TexCoordsOut));
+    gl_FragColor = (v_NodeVertexColor * texture2D(u_NodeSampler, v_NodeTexCoords));
 }

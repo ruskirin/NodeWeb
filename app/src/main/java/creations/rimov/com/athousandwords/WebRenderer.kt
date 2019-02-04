@@ -15,11 +15,12 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
     object This {
         const val NODE_COORD_COMPONENTS = 2
         const val NODE_COLOR_COMPONENTS = 3
-        const val NODE_TOTAL_COMPONENTS = NODE_COLOR_COMPONENTS + NODE_COORD_COMPONENTS
+        const val NODE_TEX_COMPONENTS = 2
+        const val NODE_TOTAL_COMPONENTS = NODE_COLOR_COMPONENTS + NODE_COORD_COMPONENTS + NODE_TEX_COMPONENTS
         const val NODE_STRIDE = NODE_TOTAL_COMPONENTS * Constants.BYTES_PER_FLOAT
 
-        //center + 4 corners + 1 repeat corner
-        const val POINTS_PER_NODE = 6
+        //4 corners + 1 repeat corner
+        const val POINTS_PER_NODE = 5
     }
 
     //Used for node size
@@ -33,8 +34,6 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private var nodeVertexArrayStatic = FloatArray(0)
     private var nodeVertexBuffMove: FloatBuffer? = null
     private var nodeVertexBuffStatic: FloatBuffer? = null
-    private var nodeTextureBuffMove: FloatBuffer? = null
-    private var nodeTextureBuffStatic: FloatBuffer? = null
 
     private val nodeVboArray = IntArray(2)
     private val staticVbo = nodeVboArray[0]
@@ -75,11 +74,14 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
         //set value for projection matrix
         GLES20.glUniformMatrix4fv(uProjectionMatHandle, 1, false, projectionMatrix, 0)
 
+        //bind bitmap
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, uNodeTextureDataHandle)
         GLES20.glUniform1i(uNodeSamplerHandle, 0) //Texture Unit 0
 
-        //Static
+        /**
+         * STATIC
+         */
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, nodeVboArray[0])
         GLES20.glEnableVertexAttribArray(aNodeCenterHandle)
         GLES20.glVertexAttribPointer(aNodeCenterHandle,
@@ -91,6 +93,11 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
             This.NODE_COLOR_COMPONENTS, GLES20.GL_FLOAT, false,
             This.NODE_STRIDE, This.NODE_COORD_COMPONENTS * Constants.BYTES_PER_FLOAT)
 
+        GLES20.glEnableVertexAttribArray(aNodeTexCoordsHandle)
+        GLES20.glVertexAttribPointer(aNodeTexCoordsHandle,
+            This.NODE_TEX_COMPONENTS, GLES20.GL_FLOAT, false,
+            This.NODE_STRIDE, (This.NODE_COORD_COMPONENTS + This.NODE_COLOR_COMPONENTS) * Constants.BYTES_PER_FLOAT)
+
         if(nodeVertexArrayStatic.size > 0) {
             for (first in 0..(nodeVertexArrayStatic.size / This.NODE_TOTAL_COMPONENTS) step This.POINTS_PER_NODE) {
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, first, This.POINTS_PER_NODE)
@@ -100,21 +107,24 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
 
 
-        //Dynamic
+        /**
+         * DYNAMIC
+         */
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, nodeVboArray[1])
         GLES20.glEnableVertexAttribArray(aNodeCenterHandle)
-        GLES20.glVertexAttribPointer(
-            aNodeCenterHandle,
-            This.NODE_COORD_COMPONENTS, GLES20.GL_FLOAT,
-            false,
+        GLES20.glVertexAttribPointer(aNodeCenterHandle,
+            This.NODE_COORD_COMPONENTS, GLES20.GL_FLOAT, false,
             This.NODE_STRIDE, 0)
 
         GLES20.glEnableVertexAttribArray(aNodeVertColorHandle)
-        GLES20.glVertexAttribPointer(
-            aNodeVertColorHandle,
-            This.NODE_COLOR_COMPONENTS, GLES20.GL_FLOAT,
-            false,
+        GLES20.glVertexAttribPointer(aNodeVertColorHandle,
+            This.NODE_COLOR_COMPONENTS, GLES20.GL_FLOAT, false,
             This.NODE_STRIDE, This.NODE_COORD_COMPONENTS * Constants.BYTES_PER_FLOAT)
+
+        GLES20.glEnableVertexAttribArray(aNodeTexCoordsHandle)
+        GLES20.glVertexAttribPointer(aNodeTexCoordsHandle,
+            This.NODE_TEX_COMPONENTS, GLES20.GL_FLOAT, false,
+            This.NODE_STRIDE, (This.NODE_COORD_COMPONENTS + This.NODE_COLOR_COMPONENTS) * Constants.BYTES_PER_FLOAT)
 
         if(nodeVertexArrayMove.size > 0) {
             for (first in 0..(nodeVertexArrayMove.size / This.NODE_TOTAL_COMPONENTS) step This.POINTS_PER_NODE) {
