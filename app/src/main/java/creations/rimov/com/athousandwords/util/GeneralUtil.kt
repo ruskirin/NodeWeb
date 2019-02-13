@@ -20,9 +20,9 @@ object GeneralUtil {
     }
 
     @JvmStatic
-    fun pixelsToPoint(x: Float, y: Float, widthPhone: Int, heightPhone: Int): Shapes.Point {
+    fun screenToNormalized(center: Shapes.Point, widthPhone: Int, heightPhone: Int): Shapes.Point {
         return Shapes.Point(
-            ((x * 2f) / widthPhone.toFloat()) - 1f,
-            -((y * 2f) / heightPhone.toFloat() - 1f))
+            ((center.x * 2f) / widthPhone.toFloat()) - 1f,
+            -((center.y * 2f) / heightPhone.toFloat() - 1f))
     }
 }

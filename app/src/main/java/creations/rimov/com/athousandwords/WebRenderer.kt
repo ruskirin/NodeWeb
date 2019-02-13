@@ -3,6 +3,7 @@ package creations.rimov.com.athousandwords
 import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
+import android.opengl.GLUtils
 import creations.rimov.com.athousandwords.objects.Node
 import creations.rimov.com.athousandwords.objects.Shapes
 import creations.rimov.com.athousandwords.util.*
@@ -19,16 +20,21 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
         const val NODE_TOTAL_COMPONENTS = NODE_COLOR_COMPONENTS + NODE_COORD_COMPONENTS + NODE_TEX_COMPONENTS
         const val NODE_STRIDE = NODE_TOTAL_COMPONENTS * Constants.BYTES_PER_FLOAT
 
-        //4 corners + 1 repeat corner
-        const val POINTS_PER_NODE = 5
+        //1 center + 4 corners + 1 repeat corner to tie together shape
+        const val POINTS_PER_NODE = 6
     }
+
+    val nodeStaticList = mutableListOf<Node>()
 
     //Used for node size
     private var magSize = 1f
 
-    private val projectionMatrix = FloatArray(16)
+    //Screen size
+    var screenW: Int = 0
+    var screenH: Int = 0
+    private var screenChanged = false
 
-    private val nodeStaticList = mutableListOf<Node>()
+    private val projectionMatrix = FloatArray(16)
 
     private var nodeVertexArrayMove = FloatArray(0)
     private var nodeVertexArrayStatic = FloatArray(0)
@@ -41,7 +47,7 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     private var uProjectionMatHandle: Int = 0
 
-    private var aNodeCenterHandle: Int = 0
+    private var aNodeVertPositionHandle: Int = 0
     private var aNodeVertColorHandle: Int = 0
     private var aNodeTexCoordsHandle: Int = 0
 
@@ -59,11 +65,12 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
             GLES20.glUseProgram(program)
 
         uProjectionMatHandle = GLES20.glGetUniformLocation(program, ShaderUtil.NodeVertexConsts.U_PROJECTION_MAT)
-        aNodeCenterHandle = GLES20.glGetAttribLocation(program, ShaderUtil.NodeVertexConsts.A_NODE_CENTER)
+
+        aNodeVertPositionHandle = GLES20.glGetAttribLocation(program, ShaderUtil.NodeVertexConsts.A_NODE_VERT_POS)
         aNodeVertColorHandle = GLES20.glGetAttribLocation(program, ShaderUtil.NodeVertexConsts.A_NODE_VERT_COLOR)
         aNodeTexCoordsHandle = GLES20.glGetAttribLocation(program, ShaderUtil.NodeVertexConsts.A_NODE_TEX_COORDS)
-        uNodeSamplerHandle = GLES20.glGetUniformLocation(program, ShaderUtil.NodeFragConsts.U_NODE_SAMPLER)
 
+        uNodeSamplerHandle = GLES20.glGetUniformLocation(program, ShaderUtil.NodeFragConsts.U_NODE_SAMPLER)
         uNodeTextureDataHandle = TextureUtil.loadTexture(context, R.drawable.ic_picture)
     }
 
@@ -71,6 +78,9 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
 
+        if(screenChanged) {
+            GeneralUtil.createOrthoProjection(screenW, screenH, projectionMatrix)
+        }
         //set value for projection matrix
         GLES20.glUniformMatrix4fv(uProjectionMatHandle, 1, false, projectionMatrix, 0)
 
@@ -83,8 +93,8 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
          * STATIC
          */
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, nodeVboArray[0])
-        GLES20.glEnableVertexAttribArray(aNodeCenterHandle)
-        GLES20.glVertexAttribPointer(aNodeCenterHandle,
+        GLES20.glEnableVertexAttribArray(aNodeVertPositionHandle)
+        GLES20.glVertexAttribPointer(aNodeVertPositionHandle,
             This.NODE_COORD_COMPONENTS, GLES20.GL_FLOAT, false,
             This.NODE_STRIDE, 0)
 
@@ -106,13 +116,12 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
 
-
         /**
          * DYNAMIC
          */
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, nodeVboArray[1])
-        GLES20.glEnableVertexAttribArray(aNodeCenterHandle)
-        GLES20.glVertexAttribPointer(aNodeCenterHandle,
+        GLES20.glEnableVertexAttribArray(aNodeVertPositionHandle)
+        GLES20.glVertexAttribPointer(aNodeVertPositionHandle,
             This.NODE_COORD_COMPONENTS, GLES20.GL_FLOAT, false,
             This.NODE_STRIDE, 0)
 
@@ -136,9 +145,14 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+
         GLES20.glViewport(0, 0, width, height)
 
-        GeneralUtil.createOrthoProjection(width, height, projectionMatrix)
+        if(screenW != width || screenH != height) {
+            screenW = width
+            screenH = height
+            screenChanged = true
+        }
     }
 
     /**
@@ -146,8 +160,8 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
      *  provide a static method which just returns a vertex array based on a center coordinate
      */
     fun buildNodeDrag(center: Shapes.Point) {
-        nodeVertexArrayMove = Node(center, magSize).getVertices()
 
+        nodeVertexArrayMove = Node(center).getVertices()
         nodeVertexBuffMove = RenderUtil.createClientSideFloatBuff(nodeVertexArrayMove)
 
         if (tempVbo != 0) {
@@ -162,7 +176,7 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     fun buildNodeStatic(center: Shapes.Point) {
         //Store a node object in a separate array
-        nodeStaticList.add(Node(center, magSize))
+        nodeStaticList.add(Node(center))
 
         //Store vertex info for rendering
         nodeVertexArrayStatic = nodeVertexArrayStatic.plus(

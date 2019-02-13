@@ -14,7 +14,7 @@ object ShaderUtil {
 
     object NodeVertexConsts {
         const val A_NODE_VERT_COLOR = "a_NodeVertexColor"
-        const val A_NODE_CENTER = "a_NodeCenter"
+        const val A_NODE_VERT_POS = "a_NodeVertexPosition"
         const val A_NODE_TEX_COORDS = "a_NodeTexCoords"
 
         const val U_PROJECTION_MAT = "u_ProjectionMat"
@@ -22,6 +22,9 @@ object ShaderUtil {
 
     object NodeFragConsts {
         const val U_NODE_SAMPLER = "u_NodeSampler"
+
+        const val A_NODE_CENTER = "a_NodeCenter"
+        const val U_NODE_RADIUS = "u_NodeRadius"
     }
 
     /**
