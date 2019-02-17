@@ -13,5 +13,6 @@ varying vec2 v_NodeTexCoords;
 
 void main() {
     //texture2D reads the value of the current pixel in the texture
-    gl_FragColor = (v_NodeVertexColor * texture2D(u_NodeSampler, v_NodeTexCoords));
+    //NOTE: negative v_NodeTexCoords to account for flipped y-axis mapping of textures in OpenGL
+    gl_FragColor = (v_NodeVertexColor * texture2D(u_NodeSampler, -v_NodeTexCoords));
 }

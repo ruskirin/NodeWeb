@@ -20,6 +20,7 @@ class LessonWebActivity : AppCompatActivity() {
     private lateinit var webView: GLSurfaceView
     private val webRenderer = WebRenderer(this)
 
+    //Flags for type of gesture performed
     private var nodeTouched = false
     private var nodePressed = false
     private var regPressed = false
@@ -48,32 +49,20 @@ class LessonWebActivity : AppCompatActivity() {
 
         webView.setOnTouchListener {view, event ->
             if(event != null) {
+                //Run by gestureDetector to handle extra functionality
                 gestureDetector.onTouchEvent(event)
 
-                //TODO: Keep playing with this; intersection test isn't working and now previous drawn nodes aren't saved
                 when(event.action) {
                     MotionEvent.ACTION_MOVE -> {
                         if(nodePressed) {
                             webView.queueEvent {
-                                webRenderer.buildNodeDrag(
-                                    GeneralUtil.screenToNormalized(
-                                        Shapes.Point(event.x, event.y),
-                                        view.measuredWidth,
-                                        view.measuredHeight
-                                    )
-                                )
+                                webRenderer.buildNodeDrag(Shapes.Point(event.x, event.y))
                             }
                             webView.requestRender()
 
                         } else if(regPressed) {
                             webView.queueEvent {
-                                webRenderer.buildNodeDrag(
-                                    GeneralUtil.screenToNormalized(
-                                        Shapes.Point(event.x, event.y),
-                                        view.measuredWidth,
-                                        view.measuredHeight
-                                    )
-                                )
+                                webRenderer.buildNodeDrag(Shapes.Point(event.x, event.y))
                             }
                             webView.requestRender()
                         }
@@ -82,15 +71,20 @@ class LessonWebActivity : AppCompatActivity() {
                     MotionEvent.ACTION_UP -> {
                         if(nodePressed) {
                             webView.queueEvent {
-                                webRenderer.buildNodeStatic(
-                                    GeneralUtil.screenToNormalized(Shapes.Point(event.x, event.y), view.measuredWidth, view.measuredHeight)
-                                )
+                                webRenderer.buildNodeStatic(Shapes.Point(event.x, event.y))
                             }
                             webView.requestRender()
 
-                            nodeTouched = false
-                            nodePressed = false
+                        } else if(regPressed) {
+                            webView.queueEvent {
+                                webRenderer.buildNodeStatic(Shapes.Point(event.x, event.y))
+                            }
+                            webView.requestRender()
                         }
+
+                        nodeTouched = false
+                        nodePressed = false
+                        regPressed = false
                     }
                 }
                 true
@@ -115,21 +109,16 @@ class LessonWebActivity : AppCompatActivity() {
     inner class UiGestureListener : GestureDetector.SimpleOnGestureListener() {
 
         override fun onDown(event: MotionEvent?): Boolean {
-            val nEvent = GeneralUtil.screenToNormalized(
-                Shapes.Point(event!!.x, event.y), webRenderer.screenW, webRenderer.screenH)
-
-            //Log.i("onDownBeforeFor", "webRenderer.nodeStaticList size = ${webRenderer.nodeStaticList.size}")
-
             //TODO: consider returning node ID
             for(node in webRenderer.nodeStaticList) {
 
-                Log.i("onDownBeforeIf", "event.x = ${nEvent.x}, node.centerX = ${node.centerX}, " +
-                        "event.y = ${nEvent.y}, node.centerY = ${node.centerY}")
-                Log.i("onDownBeforeIf2", "event.x - node.centerX = ${nEvent.x - node.centerX}, " +
-                        "event.y - node.centerY = ${nEvent.y - node.centerY}")
+                Log.i("onDownBeforeIf", "event.x = ${event!!.x}, node.centerX = ${node.centerX}, " +
+                        "event.y = ${event.y}, node.centerY = ${node.centerY}")
+                Log.i("onDownBeforeIf2", "event.x - node.centerX = ${event.x - node.centerX}, " +
+                        "event.y - node.centerY = ${event.y - node.centerY}")
 
-                if(abs(nEvent.x - node.centerX) <= Constants.RADIUS_CIRCLE
-                    && abs(nEvent.y - node.centerY) <= Constants.RADIUS_CIRCLE) {
+                if(abs(event.x - node.centerX) <= Constants.RADIUS_CIRCLE
+                    && abs(event.y - node.centerY) <= Constants.RADIUS_CIRCLE) {
 
                     nodeTouched = true
                     break

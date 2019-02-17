@@ -3,7 +3,6 @@ package creations.rimov.com.athousandwords
 import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
-import android.opengl.GLUtils
 import creations.rimov.com.athousandwords.objects.Node
 import creations.rimov.com.athousandwords.objects.Shapes
 import creations.rimov.com.athousandwords.util.*
@@ -22,12 +21,22 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         //1 center + 4 corners + 1 repeat corner to tie together shape
         const val POINTS_PER_NODE = 6
+
+        const val NODE_TEXTURE_AUDIO = R.drawable.ic_web_audio
+        const val NODE_TEXTURE_TEXT = R.drawable.ic_web_text
+        const val NODE_TEXTURE_VIDEO = R.drawable.ic_web_video
+        const val NODE_TEXTURE_IMAGE = R.drawable.ic_web_image
+        const val NODE_TEXTURE_EMPTY = R.drawable.ic_web_emptynode
+
+        @JvmStatic
+        val NODE_TEXTURE_RES_ARRAY = intArrayOf(
+                NODE_TEXTURE_AUDIO, NODE_TEXTURE_VIDEO, NODE_TEXTURE_TEXT,
+            NODE_TEXTURE_IMAGE, NODE_TEXTURE_EMPTY)
+
     }
 
+    //Store drawn nodes
     val nodeStaticList = mutableListOf<Node>()
-
-    //Used for node size
-    private var magSize = 1f
 
     //Screen size
     var screenW: Int = 0
@@ -52,7 +61,7 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private var aNodeTexCoordsHandle: Int = 0
 
     private var uNodeSamplerHandle: Int = 0
-    private var uNodeTextureDataHandle: Int = 0
+    private var uNodeTextureDataHandles = IntArray(0)
 
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
@@ -71,23 +80,21 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
         aNodeTexCoordsHandle = GLES20.glGetAttribLocation(program, ShaderUtil.NodeVertexConsts.A_NODE_TEX_COORDS)
 
         uNodeSamplerHandle = GLES20.glGetUniformLocation(program, ShaderUtil.NodeFragConsts.U_NODE_SAMPLER)
-        uNodeTextureDataHandle = TextureUtil.loadTexture(context, R.drawable.ic_picture)
+        uNodeTextureDataHandles = TextureUtil.loadTexture(context, This.NODE_TEXTURE_RES_ARRAY)
+
+        //bind bitmaps; should match the order of NODE_TEXTURE_RES_ARRAY
+        for(idx in uNodeTextureDataHandles.indices) {
+            GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + idx)
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, uNodeTextureDataHandles[idx])
+        }
     }
 
     override fun onDrawFrame(gl: GL10?) {
 
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
+        GLES20.glClearColor(0.1f, 0.3f, 0.5f, 0.1f)
 
-        if(screenChanged) {
-            GeneralUtil.createOrthoProjection(screenW, screenH, projectionMatrix)
-        }
-        //set value for projection matrix
-        GLES20.glUniformMatrix4fv(uProjectionMatHandle, 1, false, projectionMatrix, 0)
-
-        //bind bitmap
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, uNodeTextureDataHandle)
-        GLES20.glUniform1i(uNodeSamplerHandle, 0) //Texture Unit 0
+        GLES20.glUniform1i(uNodeSamplerHandle, 2) //Texture Unit 0
 
         /**
          * STATIC
@@ -151,8 +158,15 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
         if(screenW != width || screenH != height) {
             screenW = width
             screenH = height
+            MatrixUtil.createOrthoMatrix(width, height, projectionMatrix)
+
             screenChanged = true
-        }
+
+        } else
+            screenChanged = false
+
+        //set value for projection matrix
+        GLES20.glUniformMatrix4fv(uProjectionMatHandle, 1, false, projectionMatrix, 0)
     }
 
     /**
