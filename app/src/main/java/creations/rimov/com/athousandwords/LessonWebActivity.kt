@@ -108,14 +108,14 @@ class LessonWebActivity : AppCompatActivity() {
 
     inner class UiGestureListener : GestureDetector.SimpleOnGestureListener() {
 
-        override fun onDown(event: MotionEvent?): Boolean {
+        override fun onDown(event: MotionEvent): Boolean {
             //TODO: consider returning node ID
             for(node in webRenderer.nodeStaticList) {
 
-                Log.i("onDownBeforeIf", "event.x = ${event!!.x}, node.centerX = ${node.centerX}, " +
-                        "event.y = ${event.y}, node.centerY = ${node.centerY}")
-                Log.i("onDownBeforeIf2", "event.x - node.centerX = ${event.x - node.centerX}, " +
-                        "event.y - node.centerY = ${event.y - node.centerY}")
+//                Log.i("onDownBeforeIf", "event.x = ${event!!.x}, node.centerX = ${node.centerX}, " +
+//                        "event.y = ${event.y}, node.centerY = ${node.centerY}")
+//                Log.i("onDownBeforeIf2", "event.x - node.centerX = ${event.x - node.centerX}, " +
+//                        "event.y - node.centerY = ${event.y - node.centerY}")
 
                 if(abs(event.x - node.centerX) <= Constants.RADIUS_CIRCLE
                     && abs(event.y - node.centerY) <= Constants.RADIUS_CIRCLE) {

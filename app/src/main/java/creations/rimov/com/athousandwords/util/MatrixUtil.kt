@@ -27,7 +27,6 @@ object MatrixUtil {
     @JvmStatic
     fun createOrthoMatrix(width: Int, height: Int, normalizeMatrix: FloatArray) {
 
-        Log.i("Node creation", "createOrthoMatrix: width = $width, height = $height")
         normalizeMatrix[0] = 2.0f / width.toFloat() //X
         normalizeMatrix[1] = 0.0f
         normalizeMatrix[2] = 0.0f

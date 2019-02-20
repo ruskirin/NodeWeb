@@ -8,7 +8,7 @@ import android.util.Log
 
 object TextureUtil {
 
-    fun loadTexture(context: Context, resArray: IntArray): IntArray {
+    fun loadTexture(context: Context, resArray: IntArray, createMipmap: Boolean): IntArray {
         val textureObjHandles = IntArray(resArray.size)
         GLES20.glGenTextures(resArray.size, textureObjHandles, 0)
 
@@ -33,7 +33,9 @@ object TextureUtil {
             //bitmap loaded in, can release memory
             bitmap.recycle()
 
-            GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D)
+            if(createMipmap)
+                GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D)
+
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
         }
 

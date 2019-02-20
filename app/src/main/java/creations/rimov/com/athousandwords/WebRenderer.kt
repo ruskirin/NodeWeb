@@ -3,6 +3,7 @@ package creations.rimov.com.athousandwords
 import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
+import android.util.Log
 import creations.rimov.com.athousandwords.objects.Node
 import creations.rimov.com.athousandwords.objects.Shapes
 import creations.rimov.com.athousandwords.util.*
@@ -21,6 +22,9 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         //1 center + 4 corners + 1 repeat corner to tie together shape
         const val POINTS_PER_NODE = 6
+        //2 centers + 2 corners
+        const val POINTS_PER_HALF_NODE = 4
+        const val POINTS_PER_FULL_NODE = 8
 
         const val NODE_TEXTURE_AUDIO = R.drawable.ic_web_audio
         const val NODE_TEXTURE_TEXT = R.drawable.ic_web_text
@@ -41,7 +45,6 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
     //Screen size
     var screenW: Int = 0
     var screenH: Int = 0
-    private var screenChanged = false
 
     private val projectionMatrix = FloatArray(16)
 
@@ -80,13 +83,17 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
         aNodeTexCoordsHandle = GLES20.glGetAttribLocation(program, ShaderUtil.NodeVertexConsts.A_NODE_TEX_COORDS)
 
         uNodeSamplerHandle = GLES20.glGetUniformLocation(program, ShaderUtil.NodeFragConsts.U_NODE_SAMPLER)
-        uNodeTextureDataHandles = TextureUtil.loadTexture(context, This.NODE_TEXTURE_RES_ARRAY)
+        uNodeTextureDataHandles = TextureUtil.loadTexture(context, This.NODE_TEXTURE_RES_ARRAY, true)
 
         //bind bitmaps; should match the order of NODE_TEXTURE_RES_ARRAY
         for(idx in uNodeTextureDataHandles.indices) {
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + idx)
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, uNodeTextureDataHandles[idx])
         }
+
+        //Allows for transparency
+        GLES20.glEnable(GLES20.GL_BLEND)
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -115,9 +122,19 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
             This.NODE_TEX_COMPONENTS, GLES20.GL_FLOAT, false,
             This.NODE_STRIDE, (This.NODE_COORD_COMPONENTS + This.NODE_COLOR_COMPONENTS) * Constants.BYTES_PER_FLOAT)
 
+        /*
         if(nodeVertexArrayStatic.size > 0) {
             for (first in 0..(nodeVertexArrayStatic.size / This.NODE_TOTAL_COMPONENTS) step This.POINTS_PER_NODE) {
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, first, This.POINTS_PER_NODE)
+            }
+        }*/
+
+        //TODO: have a separate draw method for this + consider taking the tapped node into dynamic VBO and drawing separately
+        //TODO: consider using IBOs to half the amount of draw calls
+        if(nodeVertexArrayStatic.size > 0) {
+            for (first in 0..(nodeVertexArrayStatic.size / This.NODE_TOTAL_COMPONENTS) step This.POINTS_PER_FULL_NODE) {
+                //GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, first, This.POINTS_PER_HALF_NODE)
+                GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, This.POINTS_PER_HALF_NODE, This.POINTS_PER_HALF_NODE)
             }
         }
 
@@ -142,9 +159,17 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
             This.NODE_TEX_COMPONENTS, GLES20.GL_FLOAT, false,
             This.NODE_STRIDE, (This.NODE_COORD_COMPONENTS + This.NODE_COLOR_COMPONENTS) * Constants.BYTES_PER_FLOAT)
 
+        /*
         if(nodeVertexArrayMove.size > 0) {
             for (first in 0..(nodeVertexArrayMove.size / This.NODE_TOTAL_COMPONENTS) step This.POINTS_PER_NODE) {
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, first, This.POINTS_PER_NODE)
+            }
+        }*/
+
+        if(nodeVertexArrayMove.size > 0) {
+            for (first in 0..(nodeVertexArrayMove.size / This.NODE_TOTAL_COMPONENTS) step This.POINTS_PER_FULL_NODE) {
+                //GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, first, This.POINTS_PER_HALF_NODE)
+                GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, This.POINTS_PER_HALF_NODE, This.POINTS_PER_HALF_NODE)
             }
         }
 
@@ -159,12 +184,7 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
             screenW = width
             screenH = height
             MatrixUtil.createOrthoMatrix(width, height, projectionMatrix)
-
-            screenChanged = true
-
-        } else
-            screenChanged = false
-
+        }
         //set value for projection matrix
         GLES20.glUniformMatrix4fv(uProjectionMatHandle, 1, false, projectionMatrix, 0)
     }
@@ -192,15 +212,21 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
         //Store a node object in a separate array
         nodeStaticList.add(Node(center))
 
+        Log.i("Node Creation", "buildNodeStatic: added node size: ${nodeStaticList.last().getVertices().size}," +
+                "at: x = ${center.x}, y = ${center.y}")
+        Log.i("Node Creation", "buildNodeStatic: nodeVertexArrayStatic.size before = ${nodeVertexArrayStatic.size}")
+
         //Store vertex info for rendering
         nodeVertexArrayStatic = nodeVertexArrayStatic.plus(
             nodeStaticList.last().getVertices())
+
+        Log.i("Node Creation", "buildNodeStatic: nodeVertexArrayStatic.size after = ${nodeVertexArrayStatic.size}")
 
         nodeVertexBuffStatic = RenderUtil.createClientSideFloatBuff(nodeVertexArrayStatic)
 
         if (staticVbo != 0) {
             //Clear old buffer, create new one
-            val oldBuff = intArrayOf(nodeVboArray[1])
+            val oldBuff = intArrayOf(nodeVboArray[0])
             GLES20.glDeleteBuffers(oldBuff.size, oldBuff, 0)
         }
 
