@@ -1,4 +1,4 @@
-package creations.rimov.com.athousandwords.objects
+package creations.rimov.com.athousandwords.web.objects
 
 class SummaryBox(center: Shapes.Point) : Shapes.Base(center) {
 

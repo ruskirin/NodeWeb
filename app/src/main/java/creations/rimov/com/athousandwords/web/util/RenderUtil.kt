@@ -1,4 +1,4 @@
-package creations.rimov.com.athousandwords.util
+package creations.rimov.com.athousandwords.web.util
 
 import android.opengl.GLES20
 import java.nio.ByteBuffer

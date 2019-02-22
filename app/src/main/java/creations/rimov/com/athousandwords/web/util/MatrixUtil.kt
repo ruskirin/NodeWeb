@@ -1,6 +1,4 @@
-package creations.rimov.com.athousandwords.util
-
-import android.util.Log
+package creations.rimov.com.athousandwords.web.util
 
 object MatrixUtil {
 

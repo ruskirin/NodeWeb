@@ -1,21 +1,20 @@
-package creations.rimov.com.athousandwords
+package creations.rimov.com.athousandwords.web
 
 import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.Context
 import android.opengl.GLSurfaceView
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.Toast
-import creations.rimov.com.athousandwords.objects.Shapes
-import creations.rimov.com.athousandwords.util.Constants
-import creations.rimov.com.athousandwords.util.GeneralUtil
+import creations.rimov.com.athousandwords.web.objects.Shapes
+import creations.rimov.com.athousandwords.web.util.Constants
 import kotlin.math.abs
 
-class LessonWebActivity : AppCompatActivity() {
+class WebActivity : AppCompatActivity() {
 
     private lateinit var webView: GLSurfaceView
     private val webRenderer = WebRenderer(this)

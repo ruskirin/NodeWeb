@@ -1,0 +1,31 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/web_directory_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginRight="@dimen/web_directory_card_marginside"
+        android:layout_marginLeft="@dimen/web_directory_card_marginside"
+        android:layout_marginTop="@dimen/web_directory_card_marginbetween"
+        android:layout_marginBottom="@dimen/web_directory_card_marginbetween">
+
+        <ImageView
+            android:id="@+id/web_directory_card_Vbackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/web_directory_card_Vtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="My Topic"/>
+
+    </FrameLayout>
+
+</androidx.cardview.widget.CardView>

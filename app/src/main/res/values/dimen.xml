@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="web_directory_fab_elevation">4dp</dimen>
+    <dimen name="web_directory_fab_margin">8dp</dimen>
+    <dimen name="web_directory_card_marginside">8dp</dimen>
+    <dimen name="web_directory_card_marginbetween">2dp</dimen>
+
+</resources>

@@ -1,13 +1,14 @@
-package creations.rimov.com.athousandwords
+package creations.rimov.com.athousandwords.web
 
 import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.util.Log
-import creations.rimov.com.athousandwords.objects.Node
-import creations.rimov.com.athousandwords.objects.Shapes
-import creations.rimov.com.athousandwords.util.*
-import creations.rimov.com.athousandwords.util.shaders.ShaderUtil
+import creations.rimov.com.athousandwords.R
+import creations.rimov.com.athousandwords.web.objects.Node
+import creations.rimov.com.athousandwords.web.objects.Shapes
+import creations.rimov.com.athousandwords.web.util.*
+import creations.rimov.com.athousandwords.web.util.shaders.ShaderUtil
 import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -34,8 +35,12 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         @JvmStatic
         val NODE_TEXTURE_RES_ARRAY = intArrayOf(
-                NODE_TEXTURE_AUDIO, NODE_TEXTURE_VIDEO, NODE_TEXTURE_TEXT,
-            NODE_TEXTURE_IMAGE, NODE_TEXTURE_EMPTY)
+            NODE_TEXTURE_AUDIO,
+            NODE_TEXTURE_VIDEO,
+            NODE_TEXTURE_TEXT,
+            NODE_TEXTURE_IMAGE,
+            NODE_TEXTURE_EMPTY
+        )
 
     }
 
@@ -83,7 +88,8 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
         aNodeTexCoordsHandle = GLES20.glGetAttribLocation(program, ShaderUtil.NodeVertexConsts.A_NODE_TEX_COORDS)
 
         uNodeSamplerHandle = GLES20.glGetUniformLocation(program, ShaderUtil.NodeFragConsts.U_NODE_SAMPLER)
-        uNodeTextureDataHandles = TextureUtil.loadTexture(context, This.NODE_TEXTURE_RES_ARRAY, true)
+        uNodeTextureDataHandles = TextureUtil.loadTexture(context,
+            This.NODE_TEXTURE_RES_ARRAY, true)
 
         //bind bitmaps; should match the order of NODE_TEXTURE_RES_ARRAY
         for(idx in uNodeTextureDataHandles.indices) {
@@ -134,7 +140,10 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
         if(nodeVertexArrayStatic.size > 0) {
             for (first in 0..(nodeVertexArrayStatic.size / This.NODE_TOTAL_COMPONENTS) step This.POINTS_PER_FULL_NODE) {
                 //GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, first, This.POINTS_PER_HALF_NODE)
-                GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, This.POINTS_PER_HALF_NODE, This.POINTS_PER_HALF_NODE)
+                GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN,
+                    This.POINTS_PER_HALF_NODE,
+                    This.POINTS_PER_HALF_NODE
+                )
             }
         }
 
@@ -169,7 +178,10 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
         if(nodeVertexArrayMove.size > 0) {
             for (first in 0..(nodeVertexArrayMove.size / This.NODE_TOTAL_COMPONENTS) step This.POINTS_PER_FULL_NODE) {
                 //GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, first, This.POINTS_PER_HALF_NODE)
-                GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, This.POINTS_PER_HALF_NODE, This.POINTS_PER_HALF_NODE)
+                GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN,
+                    This.POINTS_PER_HALF_NODE,
+                    This.POINTS_PER_HALF_NODE
+                )
             }
         }
 

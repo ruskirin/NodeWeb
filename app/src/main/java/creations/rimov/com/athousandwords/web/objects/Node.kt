@@ -1,8 +1,8 @@
-package creations.rimov.com.athousandwords.objects
+package creations.rimov.com.athousandwords.web.objects
 
 import android.util.Log
-import creations.rimov.com.athousandwords.WebRenderer
-import creations.rimov.com.athousandwords.util.Constants
+import creations.rimov.com.athousandwords.web.WebRenderer
+import creations.rimov.com.athousandwords.web.util.Constants
 
 
 class Node(center: Shapes.Point) : Shapes.Base(center) {
