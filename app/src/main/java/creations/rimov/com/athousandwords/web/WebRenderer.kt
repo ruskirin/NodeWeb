@@ -41,7 +41,6 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
             NODE_TEXTURE_IMAGE,
             NODE_TEXTURE_EMPTY
         )
-
     }
 
     //Store drawn nodes
