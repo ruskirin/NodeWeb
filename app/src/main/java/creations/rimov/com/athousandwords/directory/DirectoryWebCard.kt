@@ -1,4 +1,6 @@
-package creations.rimov.com.athousandwords
+package creations.rimov.com.athousandwords.directory
+
+import creations.rimov.com.athousandwords.R
 
 class DirectoryWebCard(var title: String?, var image: Int?) {
 

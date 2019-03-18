@@ -3,7 +3,7 @@ package creations.rimov.com.athousandwords.web.objects
 
 object Shapes {
 
-    class Point(val x: Float, val y: Float) { }
+    class Point(val x: Float, val y: Float)
 
     abstract class Base(center: Point) {
         var centerX: Float = center.x

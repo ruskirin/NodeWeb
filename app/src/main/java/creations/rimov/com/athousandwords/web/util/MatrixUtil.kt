@@ -2,28 +2,8 @@ package creations.rimov.com.athousandwords.web.util
 
 object MatrixUtil {
 
-    /*@JvmStatic
-    fun createOrthoMatrix(width: Int, height: Int, projectionMatrix: FloatArray) {
-
-        val aspectRatio: Float =
-            if (width > height)
-                width.toFloat() / height.toFloat()
-            else
-                height.toFloat() / width.toFloat()
-        Log.i("createOrthoMat", "Aspect ratio = $aspectRatio, width = $width, height = $height")
-
-        if(width > height)
-            Matrix.orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f)
-        else
-            Matrix.orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f)
-
-        for(i in projectionMatrix.indices) {
-            Log.i("createOrthoMat", "Proj Matrix: entry $i = ${projectionMatrix[i]}")
-        }
-    }*/
-
     @JvmStatic
-    fun createOrthoMatrix(width: Int, height: Int, normalizeMatrix: FloatArray) {
+    fun orthoTransform(width: Int, height: Int, normalizeMatrix: FloatArray) {
 
         normalizeMatrix[0] = 2.0f / width.toFloat() //X
         normalizeMatrix[1] = 0.0f
@@ -41,5 +21,26 @@ object MatrixUtil {
         normalizeMatrix[13] = 1.0f  //Y translation
         normalizeMatrix[14] = 0.0f  //Z translation
         normalizeMatrix[15] = 1.0f  //W
+    }
+
+    @JvmStatic
+    fun scaleTransform(scaleX: Float, scaleY: Float, scaleZ: Float, matrix: FloatArray) {
+
+        matrix[0] = 1.0f * scaleX //X
+        matrix[1] = 0.0f
+        matrix[2] = 0.0f
+        matrix[3] = 0.0f
+        matrix[4] = 0.0f
+        matrix[5] = 1.0f * scaleY //Y
+        matrix[6] = 0.0f
+        matrix[7] = 0.0f
+        matrix[8] = 0.0f
+        matrix[9] = 0.0f
+        matrix[10] = 1.0f * scaleZ //Z
+        matrix[11] = 0.0f
+        matrix[12] = 0.0f //X translation
+        matrix[13] = 0.0f  //Y translation
+        matrix[14] = 0.0f  //Z translation
+        matrix[15] = 1.0f  //W
     }
 }

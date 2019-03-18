@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="web_directory_fab_elevation">4dp</dimen>
-    <dimen name="web_directory_fab_margin">8dp</dimen>
     <dimen name="web_directory_card_marginside">8dp</dimen>
     <dimen name="web_directory_card_marginbetween">2dp</dimen>
+
+    <dimen name="web_fab_elevation_def">4dp</dimen>
+    <dimen name="web_fab_margin_def">8dp</dimen>
+
+    <dimen name="web_layout_control_button_between">8dp</dimen>
+    <dimen name="web_layout_control_button_vertical">4dp</dimen>
+    <dimen name="web_layout_control_margin">8dp</dimen>
+    <dimen name="web_layout_control_button_width">56dp</dimen>
+    <dimen name="web_layout_control_button_height">56dp</dimen>
 
 </resources>

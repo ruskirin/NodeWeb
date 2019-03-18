@@ -22,9 +22,6 @@ object ShaderUtil {
 
     object NodeFragConsts {
         const val U_NODE_SAMPLER = "u_NodeSampler"
-
-        const val A_NODE_CENTER = "a_NodeCenter"
-        const val U_NODE_RADIUS = "u_NodeRadius"
     }
 
     /**

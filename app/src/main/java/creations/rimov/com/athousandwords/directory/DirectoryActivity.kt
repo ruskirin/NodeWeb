@@ -1,14 +1,12 @@
-package creations.rimov.com.athousandwords.activities
+package creations.rimov.com.athousandwords.directory
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import creations.rimov.com.athousandwords.R
-import creations.rimov.com.athousandwords.adapters.CardRecyclerAdapter
 import creations.rimov.com.athousandwords.web.WebActivity
 
 class DirectoryActivity : AppCompatActivity(), CardClickListener {
