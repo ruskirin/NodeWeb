@@ -1,7 +1,6 @@
-package creations.rimov.com.athousandwords.web
+package creations.rimov.com.athousandwords_v1.web
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
@@ -9,7 +8,6 @@ import android.opengl.GLSurfaceView
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -18,11 +16,9 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import creations.rimov.com.athousandwords.R
-import creations.rimov.com.athousandwords.web.objects.Shapes
-import creations.rimov.com.athousandwords.web.util.CameraUtil
-import creations.rimov.com.athousandwords.web.util.Constants
-import java.io.File
+import creations.rimov.com.athousandwords_v1.R
+import creations.rimov.com.athousandwords_v1.web.objects.Shapes
+import creations.rimov.com.athousandwords_v1.web.util.CameraUtil
 import java.io.IOException
 import kotlin.math.abs
 
@@ -82,12 +78,6 @@ class WebActivity : AppCompatActivity(), View.OnClickListener {
             if(event != null) {
                 //Run by gestureDetector to handle extra functionality
                 gestureDetector.onTouchEvent(event)
-
-                //Node is now only created after taking a picture, the photo path is saved inside Node object
-                //TODO: while ACTION_MOVE, node should be textured as a dashed outline
-                //       on ACTION_UP, the image is processed as a texture and assigned to a texture unit, which is then
-                //       shrunk (or mipmapped) and used as the thumbnail for the node
-                //TODO: then on node click, a new screen opens showing the full captured image
 
                 when(event.action) {
 
@@ -190,17 +180,9 @@ class WebActivity : AppCompatActivity(), View.OnClickListener {
                         photoPath = imageFile.storagePath
                     }
                 }
-                /**
-                 * TODO: Follow bookmarked tutorial for working with Gallery
-                 *        Goal is to open a view displaying photos in phone storage
-                 */
                 R.id.web_layout_control_photos -> {
 
                 }
-                /**
-                 * TODO: Follow bookmarked tutorial for working with Storage
-                 *        Goal is to open a directory displaying stores files (consider perhaps only eligible formats, cutting down work)
-                 */
                 R.id.web_layout_control_file -> {
 
                 }

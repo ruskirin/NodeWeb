@@ -1,4 +1,4 @@
-package creations.rimov.com.athousandwords
+package creations.rimov.com.athousandwords_v1
 
 import org.junit.Test
 

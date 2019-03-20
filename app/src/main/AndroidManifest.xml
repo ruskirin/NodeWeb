@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="creations.rimov.com.athousandwords">
+          xmlns:tools="http://schemas.android.com/tools" package="creations.rimov.com.athousandwords_v1">
 
     <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
     <uses-feature android:name="android.hardware.camera2"
@@ -32,7 +32,7 @@
 
         </provider>
 
-        <activity android:name="creations.rimov.com.athousandwords.directory.DirectoryActivity">
+        <activity android:name="creations.rimov.com.athousandwords_v1.directory.DirectoryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -40,7 +40,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".web.WebActivity">
+        <activity android:name="creations.rimov.com.athousandwords_v1.web.WebActivity">
 
         </activity>
 

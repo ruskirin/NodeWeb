@@ -1,17 +1,16 @@
-package creations.rimov.com.athousandwords.web
+package creations.rimov.com.athousandwords_v1.web
 
 import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
-import android.util.Log
-import creations.rimov.com.athousandwords.R
-import creations.rimov.com.athousandwords.web.objects.Node
-import creations.rimov.com.athousandwords.web.objects.Shapes
-import creations.rimov.com.athousandwords.web.util.Constants
-import creations.rimov.com.athousandwords.web.util.MatrixUtil
-import creations.rimov.com.athousandwords.web.util.RenderUtil
-import creations.rimov.com.athousandwords.web.util.TextureUtil
-import creations.rimov.com.athousandwords.web.util.shaders.ShaderUtil
+import creations.rimov.com.athousandwords_v1.R
+import creations.rimov.com.athousandwords_v1.web.objects.Node
+import creations.rimov.com.athousandwords_v1.web.objects.Shapes
+import creations.rimov.com.athousandwords_v1.web.util.Constants
+import creations.rimov.com.athousandwords_v1.web.util.MatrixUtil
+import creations.rimov.com.athousandwords_v1.web.util.RenderUtil
+import creations.rimov.com.athousandwords_v1.web.util.TextureUtil
+import creations.rimov.com.athousandwords_v1.web.util.shaders.ShaderUtil
 import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -67,8 +66,8 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
     var screenH: Int = 0
 
     //Initial center point around which the web is built
-    var worldCenterX: Int = 0
-    var worldCenterY: Int = 0
+    //var worldCenterX: Int = 0
+    //var worldCenterY: Int = 0
 
     //Center point of the screen in the world
     var eyeX: Float = 0f
@@ -168,7 +167,6 @@ class WebRenderer(private val context: Context) : GLSurfaceView.Renderer {
         GLES20.glUniformMatrix4fv(uProjectionMatHandle, 1, false, projectionMatrix, 0)
     }
 
-    //TODO: at the moment a new Node object is built every drag-tick, which is expensive
     fun buildNodeDrag(center: Shapes.Point) {
 
         clearNodeDrag()

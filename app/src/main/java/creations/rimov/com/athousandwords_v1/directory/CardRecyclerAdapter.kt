@@ -1,4 +1,4 @@
-package creations.rimov.com.athousandwords.directory
+package creations.rimov.com.athousandwords_v1.directory
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import creations.rimov.com.athousandwords.R
+import creations.rimov.com.athousandwords_v1.R
 
 class CardRecyclerAdapter(private val context: Context,
                           private val clickListener: CardClickListener

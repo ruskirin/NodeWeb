@@ -1,4 +1,4 @@
-package creations.rimov.com.athousandwords.web.util
+package creations.rimov.com.athousandwords_v1.web.util
 
 object Constants {
 

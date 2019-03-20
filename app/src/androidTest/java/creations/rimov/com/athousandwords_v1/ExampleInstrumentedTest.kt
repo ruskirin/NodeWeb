@@ -1,4 +1,4 @@
-package creations.rimov.com.athousandwords
+package creations.rimov.com.athousandwords_v1
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4

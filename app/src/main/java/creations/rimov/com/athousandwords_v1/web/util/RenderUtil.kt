@@ -1,8 +1,7 @@
-package creations.rimov.com.athousandwords.web.util
+package creations.rimov.com.athousandwords_v1.web.util
 
 import android.opengl.GLES20
-import creations.rimov.com.athousandwords.web.WebRenderer
-import creations.rimov.com.athousandwords.web.objects.Node
+import creations.rimov.com.athousandwords_v1.web.objects.Node
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer

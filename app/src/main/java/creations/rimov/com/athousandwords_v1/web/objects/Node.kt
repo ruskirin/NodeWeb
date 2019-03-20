@@ -1,11 +1,8 @@
-package creations.rimov.com.athousandwords.web.objects
+package creations.rimov.com.athousandwords_v1.web.objects
 
-import android.util.Log
-import creations.rimov.com.athousandwords.web.WebRenderer
-import creations.rimov.com.athousandwords.web.util.Constants
+import creations.rimov.com.athousandwords_v1.web.WebRenderer
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.abs
 
 
 class Node(center: Shapes.Point) : Shapes.Base(center) {

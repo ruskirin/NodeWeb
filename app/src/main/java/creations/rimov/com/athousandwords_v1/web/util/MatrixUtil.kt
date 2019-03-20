@@ -1,4 +1,4 @@
-package creations.rimov.com.athousandwords.web.util
+package creations.rimov.com.athousandwords_v1.web.util
 
 object MatrixUtil {
 
@@ -23,6 +23,7 @@ object MatrixUtil {
         normalizeMatrix[15] = 1.0f  //W
     }
 
+    //Not used atm
     @JvmStatic
     fun scaleTransform(scaleX: Float, scaleY: Float, scaleZ: Float, matrix: FloatArray) {
 

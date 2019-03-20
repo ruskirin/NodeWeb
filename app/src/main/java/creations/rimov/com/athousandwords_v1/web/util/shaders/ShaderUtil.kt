@@ -1,4 +1,4 @@
-package creations.rimov.com.athousandwords.web.util.shaders
+package creations.rimov.com.athousandwords_v1.web.util.shaders
 
 import android.content.Context
 import android.content.res.Resources

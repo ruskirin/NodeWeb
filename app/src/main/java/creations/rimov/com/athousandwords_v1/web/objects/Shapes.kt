@@ -1,4 +1,4 @@
-package creations.rimov.com.athousandwords.web.objects
+package creations.rimov.com.athousandwords_v1.web.objects
 
 
 object Shapes {
